@@ -9,9 +9,10 @@ This guide helps resolve common MongoDB Atlas connection issues when deploying t
 **Error**: `SSL routines:ssl3_read_bytes:tlsv1 alert internal error`
 
 **Solution**: 
-- Added SSL/TLS options to MongoClient configuration
-- Set `tls: true` and `tlsInsecure: false`
+- Added comprehensive SSL/TLS options to MongoClient configuration
+- Set `tls: true`, `tlsInsecure: false`, and `sslValidate: false`
 - Added connection timeout options
+- Implemented alternative connection methods
 
 ### 2. IP Whitelist Issues
 
@@ -97,6 +98,39 @@ npm start
 1. Visit MongoDB Atlas status page
 2. Check if there are any service interruptions
 3. Verify your cluster is running
+
+## 🧪 Specific Fixes for Render Deployment
+
+### Persistent SSL/TLS Issues
+If you continue to see `tlsv1 alert internal error`, the server.js has been updated with:
+
+1. **Enhanced Connection Options**:
+   ```javascript
+   {
+     tls: true,
+     tlsInsecure: false,
+     sslValidate: false, // Helps with SSL validation issues
+     connectTimeoutMS: 30000,
+     serverSelectionTimeoutMS: 30000,
+     socketTimeoutMS: 45000
+   }
+   ```
+
+2. **Alternative Connection Method**:
+   - If primary connection fails, tries alternative options
+   - Closes existing connections properly
+   - Uses different timeout values
+
+3. **Health Check Endpoint**:
+   - Uses separate MongoClient for health checks
+   - Has its own connection configuration
+   - Doesn't depend on main database connection
+
+### MongoDB Atlas Network Access
+For the `tlsv1 alert internal error`, ensure:
+1. Your IP is whitelisted in MongoDB Atlas
+2. Try adding `0.0.0.0/0` temporarily for testing
+3. Check if your cluster is paused (resume if needed)
 
 ## 📞 Support Resources
 
