@@ -1,7 +1,8 @@
 services:
   - type: web
     name: mindreprogramming-api
-    env: node
+    runtime: node
+    rootDir: backend
     buildCommand: npm install
     startCommand: npm start
     envVars:
