@@ -39,7 +39,8 @@ git push -u origin master
 4. Select your "ios" repository
 5. Render will automatically detect configuration from your `backend/render.yaml` file:
    - **Name**: mindreprogramming-api
-   - **Environment**: Node
+   - **Runtime**: Node
+   - **Root Directory**: backend
    - **Build Command**: `npm install` (from render.yaml)
    - **Start Command**: `npm start` (from render.yaml)
 
@@ -107,6 +108,12 @@ struct Constants {
    - Check that your build command is `npm install`
    - Verify that your start command is `npm start`
    - Ensure all dependencies are in package.json
+   - Make sure Root Directory is set to `backend`
+
+5. **Application crashes**
+   - Check runtime logs in Render dashboard
+   - Verify environment variables are set correctly
+   - Ensure MongoDB connection string is correct
 
 ## 🔄 Updates
 
@@ -129,6 +136,12 @@ To update your deployment after making changes:
 
 When deployment is complete, you'll have:
 - ✅ Code pushed to GitHub repository "ios"
+- ✅ Backend running on Render.com
+- ✅ MongoDB Atlas database connected
+- ✅ API endpoints accessible
+- ✅ iOS app communicating with deployed backend
+- ✅ Service suspension prevention configured
+- ✅ Zero ongoing hosting costs- ✅ Code pushed to GitHub repository "ios"
 - ✅ Backend running on Render.com
 - ✅ MongoDB Atlas database connected
 - ✅ API endpoints accessible
