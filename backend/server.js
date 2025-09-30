@@ -35,7 +35,7 @@ const client = new MongoClient(mongoURI, {
     strict: true,
     deprecationErrors: true,
   },
-  // SSL/TLS options (corrected for newer MongoDB driver)
+  // SSL/TLS options
   tls: true,
   // Connection timeout options
   connectTimeoutMS: 30000,
@@ -74,8 +74,13 @@ async function connectToDatabase() {
     return db;
   } catch (error) {
     console.error('❌ MongoDB Connection Error:', error.message);
-    console.error('Please check your MongoDB Atlas connection string and network access');
-    console.error('Ensure your IP address is whitelisted in MongoDB Atlas Network Access settings');
+    console.error('🔧 SOLUTION: Ensure your IP address is whitelisted in MongoDB Atlas Network Access settings');
+    console.error('📘 Instructions:');
+    console.error('   1. Log in to MongoDB Atlas at https://cloud.mongodb.com');
+    console.error('   2. Go to "Network Access" in the left sidebar');
+    console.error('   3. Click "Add IP Address"');
+    console.error('   4. Select "Allow Access from Anywhere" (0.0.0.0/0)');
+    console.error('   5. Click "Confirm"');
     console.error('Error details:', error);
     
     // Try alternative connection method
@@ -117,6 +122,13 @@ async function connectWithAlternativeOptions() {
     return db;
   } catch (error) {
     console.error('❌ Alternative connection also failed:', error.message);
+    console.error('🔧 CRITICAL: Your IP address is NOT whitelisted in MongoDB Atlas');
+    console.error('📘 Follow these steps to fix this issue:');
+    console.error('   1. Log in to MongoDB Atlas at https://cloud.mongodb.com');
+    console.error('   2. Go to "Network Access" in the left sidebar');
+    console.error('   3. Click "Add IP Address"');
+    console.error('   4. Select "Allow Access from Anywhere" (0.0.0.0/0)');
+    console.error('   5. Click "Confirm"');
     console.error('Error details:', error);
     process.exit(1);
   }
@@ -153,8 +165,9 @@ app.get('/api/health', async (req, res) => {
     res.status(500).json({ 
       status: 'Error',
       environment: process.env.NODE_ENV || 'development',
-      database: 'Disconnected',
+      database: 'Disconnected - Check MongoDB Atlas Network Access',
       error: error.message,
+      solution: 'Add 0.0.0.0/0 to MongoDB Atlas Network Access',
       timestamp: new Date().toISOString()
     });
   }
@@ -164,7 +177,7 @@ app.get('/api/health', async (req, res) => {
 app.post('/api/users', async (req, res) => {
   try {
     if (!db) {
-      throw new Error('Database not connected');
+      throw new Error('Database not connected - Check MongoDB Atlas Network Access');
     }
     
     const { email, name } = req.body;
@@ -182,7 +195,10 @@ app.post('/api/users', async (req, res) => {
     res.status(201).json({ message: 'User created', user: { ...user, _id: result.insertedId } });
   } catch (error) {
     console.error('User creation error:', error);
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ 
+      error: error.message,
+      solution: 'Check MongoDB Atlas Network Access settings'
+    });
   }
 });
 
@@ -190,7 +206,7 @@ app.post('/api/users', async (req, res) => {
 app.get('/api/users/:email', async (req, res) => {
   try {
     if (!db) {
-      throw new Error('Database not connected');
+      throw new Error('Database not connected - Check MongoDB Atlas Network Access');
     }
     
     const usersCollection = db.collection('users');
@@ -203,7 +219,10 @@ app.get('/api/users/:email', async (req, res) => {
     res.json(user);
   } catch (error) {
     console.error('User fetch error:', error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ 
+      error: error.message,
+      solution: 'Check MongoDB Atlas Network Access settings'
+    });
   }
 });
 
@@ -211,7 +230,7 @@ app.get('/api/users/:email', async (req, res) => {
 app.post('/api/affirmations', async (req, res) => {
   try {
     if (!db) {
-      throw new Error('Database not connected');
+      throw new Error('Database not connected - Check MongoDB Atlas Network Access');
     }
     
     const affirmationsCollection = db.collection('affirmations');
@@ -222,7 +241,10 @@ app.post('/api/affirmations', async (req, res) => {
     res.status(201).json({ message: 'Affirmation saved', affirmation: { ...affirmation, _id: result.insertedId } });
   } catch (error) {
     console.error('Affirmation save error:', error);
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ 
+      error: error.message,
+      solution: 'Check MongoDB Atlas Network Access settings'
+    });
   }
 });
 
@@ -230,7 +252,7 @@ app.post('/api/affirmations', async (req, res) => {
 app.get('/api/affirmations/user/:userId', async (req, res) => {
   try {
     if (!db) {
-      throw new Error('Database not connected');
+      throw new Error('Database not connected - Check MongoDB Atlas Network Access');
     }
     
     const affirmationsCollection = db.collection('affirmations');
@@ -239,7 +261,10 @@ app.get('/api/affirmations/user/:userId', async (req, res) => {
     res.json(affirmations);
   } catch (error) {
     console.error('Affirmations fetch error:', error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ 
+      error: error.message,
+      solution: 'Check MongoDB Atlas Network Access settings'
+    });
   }
 });
 
@@ -252,6 +277,7 @@ connectToDatabase().then(() => {
     console.log(`🧪 Test the API endpoints:`);
     console.log(`   Health check: http://localhost:${PORT}/health`);
     console.log(`   API health: http://localhost:${PORT}/api/health`);
+    console.log(`📘 IMPORTANT: If MongoDB connection fails, add 0.0.0.0/0 to MongoDB Atlas Network Access`);
   });
   
   // Handle server errors
