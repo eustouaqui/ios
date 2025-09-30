@@ -40,8 +40,8 @@ git push -u origin master
 5. Render will automatically detect configuration from your `backend/render.yaml` file:
    - **Name**: mindreprogramming-api
    - **Environment**: Node
-   - **Build Command**: `npm install`
-   - **Start Command**: `npm start`
+   - **Build Command**: `npm install` (from render.yaml)
+   - **Start Command**: `npm start` (from render.yaml)
 
 ### 4. Configure Environment Variables
 
@@ -50,6 +50,8 @@ In the "Advanced" section, add these environment variables:
 MONGODB_URI=mongodb+srv://gustavoempresamgm_db_user:9dUAfIZO6WWloiCw@clustertest.jw84vuq.mongodb.net/mindreprogramming?retryWrites=true&w=majority
 NODE_ENV=production
 ```
+
+Note: The PORT variable is automatically set by Render to 10000 for free tier services.
 
 ### 5. Deploy
 
@@ -100,6 +102,11 @@ struct Constants {
 3. **Push rejected**
    - Make sure the GitHub repository is completely empty
    - Don't initialize with README, .gitignore, or license
+
+4. **Build failures**
+   - Check that your build command is `npm install`
+   - Verify that your start command is `npm start`
+   - Ensure all dependencies are in package.json
 
 ## 🔄 Updates
 
