@@ -28,30 +28,45 @@ if (mongoURI.includes('YOUR_CLUSTER_URL_HERE')) {
 
 console.log('Using MongoDB URI:', mongoURI.replace(/\/\/(.*):(.*)@/, '//****:****@')); // Hide credentials in logs
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-// Added SSL/TLS options to handle connection issues on Render
+// Enhanced MongoDB connection options to handle SSL/TLS issues on Render
 const client = new MongoClient(mongoURI, {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
     deprecationErrors: true,
   },
+  // SSL/TLS options
   tls: true,
   tlsInsecure: false,
-  // Add connection timeout options
-  connectTimeoutMS: 10000,
-  serverSelectionTimeoutMS: 10000,
-  // Retry writes and reads
+  // Connection timeout options
+  connectTimeoutMS: 30000,
+  serverSelectionTimeoutMS: 30000,
+  socketTimeoutMS: 45000,
+  // Retry options
   retryWrites: true,
-  retryReads: true
+  retryReads: true,
+  // Additional options to handle SSL issues
+  maxPoolSize: 10,
+  minPoolSize: 1,
+  maxIdleTimeMS: 30000,
+  waitQueueTimeoutMS: 10000,
+  // SSL/TLS specific options
+  sslValidate: false, // This might help with SSL validation issues
+  // Server options
+  directConnection: false,
+  // Read preference
+  readPreference: 'primary'
 });
 
 let db;
 
 async function connectToDatabase() {
   try {
+    console.log('Connecting to MongoDB with enhanced options...');
+    
     // Connect the client to the server
     await client.connect();
+    
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("✅ Pinged your deployment. You successfully connected to MongoDB!");
@@ -64,6 +79,49 @@ async function connectToDatabase() {
     console.error('❌ MongoDB Connection Error:', error.message);
     console.error('Please check your MongoDB Atlas connection string and network access');
     console.error('Ensure your IP address is whitelisted in MongoDB Atlas Network Access settings');
+    console.error('Error details:', error);
+    
+    // Try alternative connection method
+    console.log('Attempting alternative connection method...');
+    return await connectWithAlternativeOptions();
+  }
+}
+
+// Alternative connection method with different options
+async function connectWithAlternativeOptions() {
+  try {
+    console.log('Trying alternative connection options...');
+    
+    // Close existing client if it exists
+    if (client) {
+      await client.close();
+    }
+    
+    // Create new client with alternative options
+    const alternativeClient = new MongoClient(mongoURI, {
+      tls: true,
+      tlsInsecure: false,
+      connectTimeoutMS: 15000,
+      serverSelectionTimeoutMS: 15000,
+      socketTimeoutMS: 30000,
+      retryWrites: true,
+      sslValidate: false,
+      maxPoolSize: 5,
+      minPoolSize: 1
+    });
+    
+    // Connect with alternative client
+    await alternativeClient.connect();
+    await alternativeClient.db("admin").command({ ping: 1 });
+    console.log("✅ Alternative connection successful!");
+    
+    // Update global client and db references
+    global.client = alternativeClient;
+    db = alternativeClient.db("mindreprogramming");
+    
+    return db;
+  } catch (error) {
+    console.error('❌ Alternative connection also failed:', error.message);
     console.error('Error details:', error);
     process.exit(1);
   }
@@ -78,7 +136,20 @@ app.get('/health', (req, res) => {
 app.get('/api/health', async (req, res) => {
   try {
     // Test database connection
-    await client.db("admin").command({ ping: 1 });
+    const testClient = new MongoClient(mongoURI, {
+      tls: true,
+      tlsInsecure: false,
+      connectTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 10000,
+      retryWrites: true,
+      sslValidate: false
+    });
+    
+    await testClient.connect();
+    await testClient.db("admin").command({ ping: 1 });
+    await testClient.close();
+    
     res.json({ 
       status: 'OK', 
       environment: process.env.NODE_ENV || 'development',
@@ -99,6 +170,10 @@ app.get('/api/health', async (req, res) => {
 // User registration endpoint
 app.post('/api/users', async (req, res) => {
   try {
+    if (!db) {
+      throw new Error('Database not connected');
+    }
+    
     const { email, name } = req.body;
     const usersCollection = db.collection('users');
     
@@ -113,6 +188,7 @@ app.post('/api/users', async (req, res) => {
     
     res.status(201).json({ message: 'User created', user: { ...user, _id: result.insertedId } });
   } catch (error) {
+    console.error('User creation error:', error);
     res.status(400).json({ error: error.message });
   }
 });
@@ -120,6 +196,10 @@ app.post('/api/users', async (req, res) => {
 // Get user by email
 app.get('/api/users/:email', async (req, res) => {
   try {
+    if (!db) {
+      throw new Error('Database not connected');
+    }
+    
     const usersCollection = db.collection('users');
     const user = await usersCollection.findOne({ email: req.params.email });
     
@@ -129,6 +209,7 @@ app.get('/api/users/:email', async (req, res) => {
     
     res.json(user);
   } catch (error) {
+    console.error('User fetch error:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -136,6 +217,10 @@ app.get('/api/users/:email', async (req, res) => {
 // Save affirmation endpoint
 app.post('/api/affirmations', async (req, res) => {
   try {
+    if (!db) {
+      throw new Error('Database not connected');
+    }
+    
     const affirmationsCollection = db.collection('affirmations');
     const affirmation = { ...req.body, createdAt: new Date() };
     
@@ -143,6 +228,7 @@ app.post('/api/affirmations', async (req, res) => {
     
     res.status(201).json({ message: 'Affirmation saved', affirmation: { ...affirmation, _id: result.insertedId } });
   } catch (error) {
+    console.error('Affirmation save error:', error);
     res.status(400).json({ error: error.message });
   }
 });
@@ -150,11 +236,16 @@ app.post('/api/affirmations', async (req, res) => {
 // Get affirmations by user ID
 app.get('/api/affirmations/user/:userId', async (req, res) => {
   try {
+    if (!db) {
+      throw new Error('Database not connected');
+    }
+    
     const affirmationsCollection = db.collection('affirmations');
     const affirmations = await affirmationsCollection.find({ userId: req.params.userId }).toArray();
     
     res.json(affirmations);
   } catch (error) {
+    console.error('Affirmations fetch error:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -175,6 +266,18 @@ connectToDatabase().then(() => {
     console.error('Server error:', error);
     process.exit(1);
   });
+  
+  // Handle unhandled rejections
+  process.on('unhandledRejection', (reason, promise) => {
+    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    process.exit(1);
+  });
+  
+  // Handle uncaught exceptions
+  process.on('uncaughtException', (error) => {
+    console.error('Uncaught Exception:', error);
+    process.exit(1);
+  });
 }).catch(error => {
   console.error('Failed to start server:', error);
   process.exit(1);
@@ -183,6 +286,20 @@ connectToDatabase().then(() => {
 // Graceful shutdown
 process.on('SIGINT', async () => {
   console.log('Shutting down gracefully...');
-  await client.close();
+  try {
+    await client.close();
+  } catch (error) {
+    console.error('Error closing MongoDB connection:', error);
+  }
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  console.log('Received SIGTERM, shutting down gracefully...');
+  try {
+    await client.close();
+  } catch (error) {
+    console.error('Error closing MongoDB connection:', error);
+  }
   process.exit(0);
 });
