@@ -23,42 +23,49 @@ This happens because MongoDB Atlas restricts connections to only whitelisted IP 
 2. **Navigate to Network Access**
    - In the left sidebar, click "Network Access" under the "Security" section
 
-3. **Add IP Address**
-   - Click the "Add IP Address" button
-   - You have two options:
+3. **Get Render.com Outbound IP Addresses**
+   - Open the [Render Dashboard](https://dashboard.render.com)
+   - Click on your service to open its details page
+   - Click the "Connect" button in the upper right
+   - Switch to the "Outbound" tab
+   - Copy the list of IP addresses shown
 
-   **Option A: Allow Access from Anywhere (Recommended for Development)**
+4. **Add IP Addresses to MongoDB Atlas**
+   - Return to MongoDB Atlas Network Access page
+   - Click the "Add IP Address" button
+   - For each IP address from Render:
+     - Click "Add Another IP Address"
+     - Enter the IP address from Render's outbound list
+     - Add a comment like "Render Outbound IP" for reference
+   - Alternatively, you can add IP ranges in CIDR notation
+
+**Current Render Outbound IP Addresses:**
+- 44.229.227.142
+- 54.188.71.94
+- 52.13.128.108
+- 74.220.48.0/24
+- 74.220.56.0/24
+
+5. **Alternative: Allow Access from Anywhere (Development Only)**
    - Click "Allow Access from Anywhere"
    - This automatically sets the IP to `0.0.0.0/0`
-   - Add a comment like "Render.com deployment" for reference
+   - Add a comment like "Development - Replace with specific IPs for production"
    - Click "Confirm"
 
-   **Option B: Add Specific IP Range (More Secure)**
-   - If you know specific IP ranges for Render, you can add them
-   - For most cases, use `0.0.0.0/0` during development
-
-4. **Wait for Changes to Propagate**
+6. **Wait for Changes to Propagate**
    - It may take a few minutes for the changes to take effect
-   - You'll see the new IP entry in the list with status "Active"
-
-## 🧪 Verification
-
-After whitelisting, redeploy your application on Render:
-1. Make a small change and push to GitHub
-2. Wait for Render to automatically redeploy
-3. Check the logs for successful MongoDB connection
+   - You'll see the new IP entries in the list with status "Active"
 
 ## 🛡️ Security Best Practices
 
 ### For Development
-- Use `0.0.0.0/0` to allow access from any IP
-- This is convenient but less secure
-- Good for testing and development
+- Use `0.0.0.0/0` to allow access from any IP for convenience
+- Remember to replace with specific IPs for production
 
 ### For Production
-- Use specific IP addresses or ranges
-- Research Render.com's IP ranges for production use
+- Use specific IP addresses from Render's outbound list
 - Regularly review and update your whitelist
+- Remove any unnecessary IP addresses
 
 ## 🔄 Updating IP Whitelist
 
@@ -68,11 +75,25 @@ If you need to update your IP whitelist later:
 3. Make your changes
 4. Click "Confirm"
 
+## ⚠️ Important Notes
+
+### IP Address Changes
+- Render periodically updates their outbound IP addresses
+- Check [Render's Outbound IP documentation](https://render.com/docs/outbound-ip-addresses) for updates
+- On October 27, 2025, Render will roll out new outbound IP ranges
+- You'll need to add the new IP ranges to your MongoDB Atlas access rules
+
+### Workspace Creation Date
+- If you created your Render workspace before January 23, 2022:
+  - Services in the Oregon region do not use a fixed set of outbound IP addresses
+  - Consider creating a new workspace for fixed IP addresses
+  - Or use a static IP provider like QuotaGuard
+
 ## 🆘 Troubleshooting
 
 ### Issue: Still Getting Connection Errors
-1. Double-check that you added `0.0.0.0/0` or your specific IP
-2. Verify the entry shows as "Active" in Network Access
+1. Double-check that you added all IP addresses from Render's outbound list
+2. Verify all entries show as "Active" in Network Access
 3. Check that your MongoDB cluster is not paused
 4. Ensure your connection string is correct
 
@@ -84,7 +105,8 @@ If you need to update your IP whitelist later:
 ## 📞 Support Resources
 
 - [MongoDB Atlas Network Access Documentation](https://docs.atlas.mongodb.com/security/ip-access-list/)
-- [Render.com Documentation](https://render.com/docs)
+- [Render.com Outbound IP Addresses Documentation](https://render.com/docs/outbound-ip-addresses)
+- [Render.com MongoDB Atlas Integration Guide](https://www.mongodb.com/docs/atlas/reference/partner-integrations/render/)
 - MongoDB Atlas Support: Available through the Atlas dashboard
 
 ## ✅ Success Verification

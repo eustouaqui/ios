@@ -126,9 +126,20 @@ async function connectWithAlternativeOptions() {
     console.error('📘 Follow these steps to fix this issue:');
     console.error('   1. Log in to MongoDB Atlas at https://cloud.mongodb.com');
     console.error('   2. Go to "Network Access" in the left sidebar');
-    console.error('   3. Click "Add IP Address"');
-    console.error('   4. Select "Allow Access from Anywhere" (0.0.0.0/0)');
-    console.error('   5. Click "Confirm"');
+    console.error('   3. Add these specific Render IP addresses to MongoDB Atlas Network Access:');
+    console.error('      - 44.229.227.142');
+    console.error('      - 54.188.71.94');
+    console.error('      - 52.13.128.108');
+    console.error('      - 74.220.48.0/24');
+    console.error('      - 74.220.56.0/24');
+    console.error('   4. For each IP address:');
+    console.error('      - Click "Add IP Address"');
+    console.error('      - Click "Add Another IP Address" for additional addresses');
+    console.error('      - Enter the IP address');
+    console.error('      - Add a comment like "Render Outbound IP" for reference');
+    console.error('      - Click "Confirm"');
+    console.error('   5. For development only, you can temporarily use "Allow Access from Anywhere" (0.0.0.0/0)');
+    console.error('   6. Wait a few minutes for changes to propagate');
     console.error('Error details:', error);
     process.exit(1);
   }
@@ -167,7 +178,21 @@ app.get('/api/health', async (req, res) => {
       environment: process.env.NODE_ENV || 'development',
       database: 'Disconnected - Check MongoDB Atlas Network Access',
       error: error.message,
-      solution: 'Add 0.0.0.0/0 to MongoDB Atlas Network Access',
+      solution: 'Add Render IP addresses to MongoDB Atlas Network Access',
+      renderIPs: [
+        '44.229.227.142',
+        '54.188.71.94',
+        '52.13.128.108',
+        '74.220.48.0/24',
+        '74.220.56.0/24'
+      ],
+      detailedSteps: [
+        '1. Log in to MongoDB Atlas at https://cloud.mongodb.com',
+        '2. Go to "Network Access" in the left sidebar',
+        '3. Click "Add IP Address"',
+        '4. Add each of the Render IP addresses listed above',
+        '5. Or for development only: Add 0.0.0.0/0 to MongoDB Atlas Network Access'
+      ],
       timestamp: new Date().toISOString()
     });
   }
@@ -177,7 +202,7 @@ app.get('/api/health', async (req, res) => {
 app.post('/api/users', async (req, res) => {
   try {
     if (!db) {
-      throw new Error('Database not connected - Check MongoDB Atlas Network Access');
+      throw new Error('Database not connected - Check MongoDB Atlas Network Access. Get Render outbound IP addresses from Render Dashboard and add to MongoDB Atlas Network Access.');
     }
     
     const { email, name } = req.body;
@@ -197,7 +222,21 @@ app.post('/api/users', async (req, res) => {
     console.error('User creation error:', error);
     res.status(400).json({ 
       error: error.message,
-      solution: 'Check MongoDB Atlas Network Access settings'
+      solution: 'Check MongoDB Atlas Network Access settings',
+      renderIPs: [
+        '44.229.227.142',
+        '54.188.71.94',
+        '52.13.128.108',
+        '74.220.48.0/24',
+        '74.220.56.0/24'
+      ],
+      detailedSteps: [
+        '1. Log in to MongoDB Atlas at https://cloud.mongodb.com',
+        '2. Go to "Network Access" in the left sidebar',
+        '3. Click "Add IP Address"',
+        '4. Add each of the Render IP addresses listed above',
+        '5. Or for development only: Add 0.0.0.0/0 to MongoDB Atlas Network Access'
+      ]
     });
   }
 });
@@ -206,7 +245,7 @@ app.post('/api/users', async (req, res) => {
 app.get('/api/users/:email', async (req, res) => {
   try {
     if (!db) {
-      throw new Error('Database not connected - Check MongoDB Atlas Network Access');
+      throw new Error('Database not connected - Check MongoDB Atlas Network Access. Get Render outbound IP addresses from Render Dashboard and add to MongoDB Atlas Network Access.');
     }
     
     const usersCollection = db.collection('users');
@@ -221,7 +260,21 @@ app.get('/api/users/:email', async (req, res) => {
     console.error('User fetch error:', error);
     res.status(500).json({ 
       error: error.message,
-      solution: 'Check MongoDB Atlas Network Access settings'
+      solution: 'Check MongoDB Atlas Network Access settings',
+      renderIPs: [
+        '44.229.227.142',
+        '54.188.71.94',
+        '52.13.128.108',
+        '74.220.48.0/24',
+        '74.220.56.0/24'
+      ],
+      detailedSteps: [
+        '1. Log in to MongoDB Atlas at https://cloud.mongodb.com',
+        '2. Go to "Network Access" in the left sidebar',
+        '3. Click "Add IP Address"',
+        '4. Add each of the Render IP addresses listed above',
+        '5. Or for development only: Add 0.0.0.0/0 to MongoDB Atlas Network Access'
+      ]
     });
   }
 });
@@ -230,7 +283,7 @@ app.get('/api/users/:email', async (req, res) => {
 app.post('/api/affirmations', async (req, res) => {
   try {
     if (!db) {
-      throw new Error('Database not connected - Check MongoDB Atlas Network Access');
+      throw new Error('Database not connected - Check MongoDB Atlas Network Access. Get Render outbound IP addresses from Render Dashboard and add to MongoDB Atlas Network Access.');
     }
     
     const affirmationsCollection = db.collection('affirmations');
@@ -243,7 +296,21 @@ app.post('/api/affirmations', async (req, res) => {
     console.error('Affirmation save error:', error);
     res.status(400).json({ 
       error: error.message,
-      solution: 'Check MongoDB Atlas Network Access settings'
+      solution: 'Check MongoDB Atlas Network Access settings',
+      renderIPs: [
+        '44.229.227.142',
+        '54.188.71.94',
+        '52.13.128.108',
+        '74.220.48.0/24',
+        '74.220.56.0/24'
+      ],
+      detailedSteps: [
+        '1. Log in to MongoDB Atlas at https://cloud.mongodb.com',
+        '2. Go to "Network Access" in the left sidebar',
+        '3. Click "Add IP Address"',
+        '4. Add each of the Render IP addresses listed above',
+        '5. Or for development only: Add 0.0.0.0/0 to MongoDB Atlas Network Access'
+      ]
     });
   }
 });
@@ -252,7 +319,7 @@ app.post('/api/affirmations', async (req, res) => {
 app.get('/api/affirmations/user/:userId', async (req, res) => {
   try {
     if (!db) {
-      throw new Error('Database not connected - Check MongoDB Atlas Network Access');
+      throw new Error('Database not connected - Check MongoDB Atlas Network Access. Get Render outbound IP addresses from Render Dashboard and add to MongoDB Atlas Network Access.');
     }
     
     const affirmationsCollection = db.collection('affirmations');
@@ -263,7 +330,129 @@ app.get('/api/affirmations/user/:userId', async (req, res) => {
     console.error('Affirmations fetch error:', error);
     res.status(500).json({ 
       error: error.message,
-      solution: 'Check MongoDB Atlas Network Access settings'
+      solution: 'Check MongoDB Atlas Network Access settings',
+      renderIPs: [
+        '44.229.227.142',
+        '54.188.71.94',
+        '52.13.128.108',
+        '74.220.48.0/24',
+        '74.220.56.0/24'
+      ],
+      detailedSteps: [
+        '1. Log in to MongoDB Atlas at https://cloud.mongodb.com',
+        '2. Go to "Network Access" in the left sidebar',
+        '3. Click "Add IP Address"',
+        '4. Add each of the Render IP addresses listed above',
+        '5. Or for development only: Add 0.0.0.0/0 to MongoDB Atlas Network Access'
+      ]
+    });
+  }
+});
+
+// Generate binaural audio endpoint
+app.post('/api/generate-binaural-audio', async (req, res) => {
+  try {
+    if (!db) {
+      throw new Error('Database not connected - Check MongoDB Atlas Network Access. Get Render outbound IP addresses from Render Dashboard and add to MongoDB Atlas Network Access.');
+    }
+    
+    const { userId, affirmationText, binauralFrequency, voiceType } = req.body;
+    
+    // Validate input
+    if (!userId || !affirmationText) {
+      return res.status(400).json({ error: 'userId and affirmationText are required' });
+    }
+    
+    // In a real implementation, this would:
+    // 1. Generate text-to-speech audio from the affirmation text
+    // 2. Combine it with binaural frequencies
+    // 3. Return a secure URL or stream the audio data
+    
+    // For demonstration, we'll simulate the process
+    const audioData = {
+      audioId: `audio_${Date.now()}_${userId}`,
+      userId: userId,
+      affirmationText: affirmationText,
+      binauralFrequency: binauralFrequency || '6Hz',
+      voiceType: voiceType || 'male',
+      createdAt: new Date(),
+      // In a real implementation, this would be a secure URL to the audio file
+      audioUrl: `/api/audio/${userId}/binaural_6hz_${Date.now()}.wav`,
+      duration: 300 // 5 minutes in seconds
+    };
+    
+    // Save audio generation record to database
+    const audioCollection = db.collection('audio_files');
+    const result = await audioCollection.insertOne(audioData);
+    
+    // Return success response
+    res.status(201).json({
+      message: 'Binaural audio generation started',
+      audioId: audioData.audioId,
+      audioUrl: audioData.audioUrl,
+      duration: audioData.duration
+    });
+    
+  } catch (error) {
+    console.error('Binaural audio generation error:', error);
+    res.status(500).json({ 
+      error: error.message,
+      solution: 'Check MongoDB Atlas Network Access settings',
+      renderIPs: [
+        '44.229.227.142',
+        '54.188.71.94',
+        '52.13.128.108',
+        '74.220.48.0/24',
+        '74.220.56.0/24'
+      ],
+      detailedSteps: [
+        '1. Log in to MongoDB Atlas at https://cloud.mongodb.com',
+        '2. Go to "Network Access" in the left sidebar',
+        '3. Click "Add IP Address"',
+        '4. Add each of the Render IP addresses listed above',
+        '5. Or for development only: Add 0.0.0.0/0 to MongoDB Atlas Network Access'
+      ]
+    });
+  }
+});
+
+// Serve audio files endpoint (in a real implementation, this would be more secure)
+app.get('/api/audio/:userId/:filename', async (req, res) => {
+  try {
+    const { userId, filename } = req.params;
+    
+    // In a real implementation, this would:
+    // 1. Verify the user has access to this audio file
+    // 2. Stream the audio file from secure storage
+    // 3. Ensure the file cannot be accessed by other users
+    
+    // For demonstration, we'll return a placeholder response
+    res.status(200).json({
+      message: 'Audio file would be served here',
+      userId: userId,
+      filename: filename,
+      note: 'In a real implementation, this would stream the actual audio file'
+    });
+    
+  } catch (error) {
+    console.error('Audio file serving error:', error);
+    res.status(500).json({ 
+      error: error.message,
+      solution: 'Check MongoDB Atlas Network Access settings',
+      renderIPs: [
+        '44.229.227.142',
+        '54.188.71.94',
+        '52.13.128.108',
+        '74.220.48.0/24',
+        '74.220.56.0/24'
+      ],
+      detailedSteps: [
+        '1. Log in to MongoDB Atlas at https://cloud.mongodb.com',
+        '2. Go to "Network Access" in the left sidebar',
+        '3. Click "Add IP Address"',
+        '4. Add each of the Render IP addresses listed above',
+        '5. Or for development only: Add 0.0.0.0/0 to MongoDB Atlas Network Access'
+      ]
     });
   }
 });

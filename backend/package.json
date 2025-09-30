@@ -8,7 +8,14 @@
     "dev": "nodemon server.js",
     "health-check": "node web-health-checker.js",
     "html-check": "node html-health-checker.js",
-    "test-health": "node test-health-check.js"
+    "test-health": "node test-health-check.js",
+    "test-functionality": "node test-functionality.js",
+    "test-render": "node test-render-endpoints.js",
+    "test-connectivity": "node test-render-connectivity.js",
+    "test-complete-api": "node test-complete-api.js",
+    "test-binaural": "node test-binaural-audio.js",
+    "verify-endpoints": "node verify-endpoints.js",
+    "verify-mongodb": "node verify-mongodb-data.js"
   },
   "keywords": [
     "mind",

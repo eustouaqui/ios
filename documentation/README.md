@@ -147,6 +147,14 @@ cd backend
 node test-api.js
 ```
 
+Run the comprehensive functionality test:
+```bash
+cd backend
+npm run test-functionality
+```
+
+See [API Functionality Test Guide](API_FUNCTIONALITY_TEST.md) for detailed instructions.
+
 ### Manual Testing
 
 Use the API demo page (`web-frontend/api-demo.html`) to manually test the API endpoints.
@@ -181,8 +189,11 @@ Deploy the contents of the `web-frontend` directory to any static hosting servic
 ### iOS App Integration
 
 1. Configure your In-App Purchase products in App Store Connect
-2. Update product identifiers in the iOS app code
-3. Implement receipt validation in your app using the backend API
+2. Update the API base URL in the iOS app to point to your Render deployment
+   - See [iOS Deployment Guide](IOS_DEPLOYMENT_GUIDE.md) for detailed instructions
+   - See [Render Deployment Verification](RENDER_DEPLOYMENT_VERIFICATION.md) for deployment status
+3. Update product identifiers in the iOS app code
+4. Implement receipt validation in your app using the backend API
 
 ### Web Frontend Integration
 
@@ -198,6 +209,7 @@ Deploy the contents of the `web-frontend` directory to any static hosting servic
 2. **JWT secret too weak**: Use a strong, random secret in production
 3. **CORS errors**: Update CORS configuration in `server.js`
 4. **Receipt validation fails**: Verify Apple/Google credentials are correct
+5. **MongoDB Connection Issues**: See [Render IP Whitelisting Guide](RENDER_IP_WHITELISTING.md) for secure IP configuration
 
 ### Getting Help
 

@@ -35,6 +35,13 @@ npm run dev
 npm start
 ```
 
+### 5. Test API Functionality
+```bash
+npm run test-functionality
+```
+
+See [API Functionality Test Guide](../documentation/API_FUNCTIONALITY_TEST.md) for detailed instructions.
+
 ## 🔄 API Endpoints
 
 ### Health Check
@@ -56,7 +63,17 @@ npm start
 3. Set up environment variables in Render dashboard:
    - `MONGODB_URI` - Your MongoDB Atlas connection string
    - `NODE_ENV` - Set to `production`
-4. Deploy!
+4. Configure MongoDB Atlas IP Whitelisting:
+   - See [Render IP Whitelisting Guide](../documentation/RENDER_IP_WHITELISTING.md) for secure IP configuration
+5. Deploy!
+
+## 📱 iOS App Integration
+
+After deploying to Render:
+1. Update the iOS app to use your Render URL
+   - See [iOS Deployment Guide](../documentation/IOS_DEPLOYMENT_GUIDE.md) for detailed instructions
+2. Test the integration thoroughly
+3. Prepare for App Store submission
 
 ## 🛠️ Environment Variables
 

@@ -2,7 +2,11 @@ import Foundation
 
 struct Constants {
     // API Configuration
-    static let apiBaseURL = "http://localhost:3000/api" // Change to your production URL
+    #if DEBUG
+    static let apiBaseURL = "http://localhost:5000/api" // Development URL
+    #else
+    static let apiBaseURL = "https://ios-hm94.onrender.com/api" // Production URL
+    #endif
     static let apiKey = "your-api-key" // Replace with your actual API key
     
     // Subscription Product IDs

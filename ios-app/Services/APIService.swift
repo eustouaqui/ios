@@ -6,7 +6,7 @@ class APIService: ObservableObject {
     
     private init() {}
     
-    private let baseURL = "http://localhost:3000/api" // Change to your production URL
+    private let baseURL = Constants.apiBaseURL
     private let session = URLSession.shared
     
     // MARK: - Authentication

@@ -12,6 +12,8 @@ struct AffirmationFormView: View {
     @State private var errorMessage = ""
     @State private var showSubscriptionRequired = false
     @State private var showResult = false
+    @State private var showAudioPlayer = false
+    @State private var isPlaying = false
     
     // Religion options
     @State private var selectedReligions: Set<String> = []
@@ -38,74 +40,87 @@ struct AffirmationFormView: View {
     ]
     
     var body: some View {
-        NavigationView {
-            VStack {
-                // Progress indicator
-                ProgressView("Step \(currentStep + 1) of 4", value: Double(currentStep), total: 3.0)
-                    .padding()
-                
-                // Step content
-                Group {
-                    if currentStep == 0 {
-                        ProfileStepView(
-                            profileData: $profileData,
-                            selectedReligions: $selectedReligions,
-                            showOtherReligion: $showOtherReligion,
-                            otherReligionText: $otherReligionText,
-                            religions: religions,
-                            maritalStatusOptions: maritalStatusOptions
-                        )
-                    } else if currentStep == 1 {
-                        GoalsStepView(
-                            selectedGoals: $selectedGoals,
-                            showOtherGoal: $showOtherGoal,
-                            otherGoalText: $otherGoalText,
-                            goals: goals
-                        )
-                    } else if currentStep == 2 {
-                        PreferencesStepView(preferencesData: $preferencesData)
-                    } else {
-                        ResultStepView(
-                            affirmationText: $affirmationText,
-                            binauralFrequency: $binauralFrequency,
-                            isLoading: $isLoading,
-                            showSubscriptionRequired: $showSubscriptionRequired,
-                            showResult: $showResult
-                        )
+        Group {
+            if showAudioPlayer {
+                AudioPlayerView(
+                    isPlaying: $isPlaying,
+                    affirmationText: $affirmationText,
+                    binauralFrequency: $binauralFrequency,
+                    onDismiss: {
+                        showAudioPlayer = false
+                    }
+                )
+            } else {
+                NavigationView {
+                    VStack {
+                        // Progress indicator
+                        ProgressView("Step \(currentStep + 1) of 4", value: Double(currentStep), total: 3.0)
+                            .padding()
+                        
+                        // Step content
+                        Group {
+                            if currentStep == 0 {
+                                ProfileStepView(
+                                    profileData: $profileData,
+                                    selectedReligions: $selectedReligions,
+                                    showOtherReligion: $showOtherReligion,
+                                    otherReligionText: $otherReligionText,
+                                    religions: religions,
+                                    maritalStatusOptions: maritalStatusOptions
+                                )
+                            } else if currentStep == 1 {
+                                GoalsStepView(
+                                    selectedGoals: $selectedGoals,
+                                    showOtherGoal: $showOtherGoal,
+                                    otherGoalText: $otherGoalText,
+                                    goals: goals
+                                )
+                            } else if currentStep == 2 {
+                                PreferencesStepView(preferencesData: $preferencesData)
+                            } else {
+                                ResultStepView(
+                                    affirmationText: $affirmationText,
+                                    binauralFrequency: $binauralFrequency,
+                                    isLoading: $isLoading,
+                                    showSubscriptionRequired: $showSubscriptionRequired,
+                                    showResult: $showResult
+                                )
+                            }
+                        }
+                        
+                        // Navigation buttons
+                        HStack {
+                            if currentStep > 0 {
+                                Button("Previous") {
+                                    currentStep -= 1
+                                }
+                                .buttonStyle(.bordered)
+                            }
+                            
+                            Spacer()
+                            
+                            if currentStep < 3 {
+                                Button("Next") {
+                                    handleNext()
+                                }
+                                .buttonStyle(.borderedProminent)
+                            } else {
+                                Button("Generate Audio") {
+                                    generateAudio()
+                                }
+                                .buttonStyle(.borderedProminent)
+                            }
+                        }
+                        .padding()
+                    }
+                    .navigationTitle("Personalized Affirmation")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .alert("Error", isPresented: $showError) {
+                        Button("OK") { }
+                    } message: {
+                        Text(errorMessage)
                     }
                 }
-                
-                // Navigation buttons
-                HStack {
-                    if currentStep > 0 {
-                        Button("Previous") {
-                            currentStep -= 1
-                        }
-                        .buttonStyle(.bordered)
-                    }
-                    
-                    Spacer()
-                    
-                    if currentStep < 3 {
-                        Button("Next") {
-                            handleNext()
-                        }
-                        .buttonStyle(.borderedProminent)
-                    } else {
-                        Button("Generate Audio") {
-                            generateAudio()
-                        }
-                        .buttonStyle(.borderedProminent)
-                    }
-                }
-                .padding()
-            }
-            .navigationTitle("Personalized Affirmation")
-            .navigationBarTitleDisplayMode(.inline)
-            .alert("Error", isPresented: $showError) {
-                Button("OK") { }
-            } message: {
-                Text(errorMessage)
             }
         }
     }
@@ -201,6 +216,9 @@ struct AffirmationFormView: View {
         
         // In a real implementation, this would call the backend API
         // to generate the audio file with the selected voice and binaural frequency
+        
+        // For now, we'll show the audio player
+        showAudioPlayer = true
     }
 }
 

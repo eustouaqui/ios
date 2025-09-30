@@ -21,9 +21,24 @@ This guide helps resolve common MongoDB Atlas connection issues when deploying t
 **Solution**:
 1. Log in to MongoDB Atlas
 2. Go to "Network Access" in the left sidebar
-3. Add these IP addresses:
-   - `0.0.0.0/0` (for development - allows access from anywhere)
-   - Or specifically add Render's IP ranges if known
+3. Get specific IP addresses from Render:
+   - Open the [Render Dashboard](https://dashboard.render.com)
+   - Click on your service to open its details page
+   - Click the "Connect" button in the upper right
+   - Switch to the "Outbound" tab
+   - Copy the list of IP addresses shown
+4. Add these IP addresses to MongoDB Atlas Network Access
+   - For each IP address from Render, click "Add Another IP Address"
+   - Enter the IP address from Render's outbound list
+   - Add a comment like "Render Outbound IP" for reference
+5. For development, you can temporarily use `0.0.0.0/0` but replace with specific IPs for production
+
+**Current Render Outbound IP Addresses:**
+- 44.229.227.142
+- 54.188.71.94
+- 52.13.128.108
+- 74.220.48.0/24
+- 74.220.56.0/24
 
 **See detailed guide**: [MONGODB_IP_WHITELISTING.md](MONGODB_IP_WHITELISTING.md)
 
