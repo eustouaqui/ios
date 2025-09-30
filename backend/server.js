@@ -35,9 +35,8 @@ const client = new MongoClient(mongoURI, {
     strict: true,
     deprecationErrors: true,
   },
-  // SSL/TLS options
+  // SSL/TLS options (corrected for newer MongoDB driver)
   tls: true,
-  tlsInsecure: false,
   // Connection timeout options
   connectTimeoutMS: 30000,
   serverSelectionTimeoutMS: 30000,
@@ -45,13 +44,11 @@ const client = new MongoClient(mongoURI, {
   // Retry options
   retryWrites: true,
   retryReads: true,
-  // Additional options to handle SSL issues
+  // Additional options to handle connection issues
   maxPoolSize: 10,
   minPoolSize: 1,
   maxIdleTimeMS: 30000,
   waitQueueTimeoutMS: 10000,
-  // SSL/TLS specific options
-  sslValidate: false, // This might help with SSL validation issues
   // Server options
   directConnection: false,
   // Read preference
@@ -100,12 +97,10 @@ async function connectWithAlternativeOptions() {
     // Create new client with alternative options
     const alternativeClient = new MongoClient(mongoURI, {
       tls: true,
-      tlsInsecure: false,
       connectTimeoutMS: 15000,
       serverSelectionTimeoutMS: 15000,
       socketTimeoutMS: 30000,
       retryWrites: true,
-      sslValidate: false,
       maxPoolSize: 5,
       minPoolSize: 1
     });
@@ -138,12 +133,10 @@ app.get('/api/health', async (req, res) => {
     // Test database connection
     const testClient = new MongoClient(mongoURI, {
       tls: true,
-      tlsInsecure: false,
       connectTimeoutMS: 5000,
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 10000,
-      retryWrites: true,
-      sslValidate: false
+      retryWrites: true
     });
     
     await testClient.connect();
