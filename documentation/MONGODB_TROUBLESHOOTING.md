@@ -10,7 +10,7 @@ This guide helps resolve common MongoDB Atlas connection issues when deploying t
 
 **Solution**: 
 - Added comprehensive SSL/TLS options to MongoClient configuration
-- Set `tls: true`, `tlsInsecure: false`, and `sslValidate: false`
+- Set `tls: true` (corrected from deprecated ssl options)
 - Added connection timeout options
 - Implemented alternative connection methods
 
@@ -104,12 +104,10 @@ npm start
 ### Persistent SSL/TLS Issues
 If you continue to see `tlsv1 alert internal error`, the server.js has been updated with:
 
-1. **Enhanced Connection Options**:
+1. **Enhanced Connection Options** (corrected for newer MongoDB driver):
    ```javascript
    {
-     tls: true,
-     tlsInsecure: false,
-     sslValidate: false, // Helps with SSL validation issues
+     tls: true, // Correct option for newer driver versions
      connectTimeoutMS: 30000,
      serverSelectionTimeoutMS: 30000,
      socketTimeoutMS: 45000
