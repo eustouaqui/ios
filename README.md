@@ -53,6 +53,10 @@ Comprehensive documentation including:
 3. Configure environment variables
 4. Run the server: `npm start`
 
+### Local Testing
+1. Follow the [Quick Start Local Testing Guide](QUICK_START_LOCAL_TESTING.md)
+2. Use the [iOS Device Testing Guide](IOS_DEVICE_TESTING_GUIDE.md) for device-specific instructions
+
 ## 📦 Deployment
 
 The project is configured for deployment to Render.com with MongoDB Atlas:
@@ -76,3 +80,9 @@ See the [documentation](documentation/) directory for detailed guides on:
 - [Render Deployment Guide](documentation/RENDER_DEPLOYMENT_GUIDE.md)
 - [MongoDB Atlas Setup](documentation/MONGODB_ATLAS_SETUP.md)
 - [App Store Requirements](documentation/APP_STORE_REQUIREMENTS.md)
+
+### Local Testing Guides
+
+- [Local Testing Setup](LOCAL_TESTING_SETUP.md)
+- [Quick Start Local Testing](QUICK_START_LOCAL_TESTING.md)
+- [iOS Device Testing Guide](IOS_DEVICE_TESTING_GUIDE.md)

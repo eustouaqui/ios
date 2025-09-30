@@ -16,7 +16,9 @@
     "test-binaural": "node test-binaural-audio.js",
     "verify-endpoints": "node verify-endpoints.js",
     "verify-mongodb": "node verify-mongodb-data.js",
-    "monitor-deployment": "node monitor-deployment.js"
+    "monitor-deployment": "node monitor-deployment.js",
+    "find-ip": "node ../find-local-ip.js",
+    "test-ios": "node ../test-ios-connectivity.js"
   },
   "keywords": [
     "mind",
