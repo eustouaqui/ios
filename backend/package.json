@@ -7,7 +7,8 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "health-check": "node web-health-checker.js",
-    "html-check": "node html-health-checker.js"
+    "html-check": "node html-health-checker.js",
+    "test-health": "node test-health-check.js"
   },
   "keywords": [
     "mind",
