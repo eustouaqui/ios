@@ -25,6 +25,8 @@ This guide helps resolve common MongoDB Atlas connection issues when deploying t
    - `0.0.0.0/0` (for development - allows access from anywhere)
    - Or specifically add Render's IP ranges if known
 
+**See detailed guide**: [MONGODB_IP_WHITELISTING.md](MONGODB_IP_WHITELISTING.md)
+
 ### 3. Connection String Issues
 
 **Problem**: Incorrect or incomplete connection string
@@ -129,6 +131,7 @@ For the `tlsv1 alert internal error`, ensure:
 1. Your IP is whitelisted in MongoDB Atlas
 2. Try adding `0.0.0.0/0` temporarily for testing
 3. Check if your cluster is paused (resume if needed)
+4. **See detailed guide**: [MONGODB_IP_WHITELISTING.md](MONGODB_IP_WHITELISTING.md)
 
 ## 📞 Support Resources
 
