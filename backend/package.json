@@ -15,7 +15,8 @@
     "test-complete-api": "node test-complete-api.js",
     "test-binaural": "node test-binaural-audio.js",
     "verify-endpoints": "node verify-endpoints.js",
-    "verify-mongodb": "node verify-mongodb-data.js"
+    "verify-mongodb": "node verify-mongodb-data.js",
+    "monitor-deployment": "node monitor-deployment.js"
   },
   "keywords": [
     "mind",
